@@ -1,7 +1,10 @@
 import pandas as pd
 import chardet
 
+MIN_COL = 40
+
 def load_csv(file_path):
+  # Not used in "transform_file"
   try:
     with open(file_path, 'rb') as f:
       result = chardet.detect(f.read())
@@ -12,10 +15,11 @@ def load_csv(file_path):
   except Exception as e:
     print(f"Error loading CSV file: {e}")
     return None
-def move_column(df1, df2, idx_old, idx_new):
-  df2[idx_new] = df1.pop(idx_old)
 
 def transform_file(df):
+  if df is None:
+    return None;
+
   # Settings
   header_old = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
                 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ']
@@ -43,22 +47,31 @@ def transform_file(df):
 
   df_new = pd.DataFrame(columns=header_new)
 
-  if df is not None:
+  # Change header name
+  if df.columns.size <= len(header_old):
     df.columns = header_old[0:df.columns.size]
-    
-    # Move columns
-    for pair in move_col_pairs:
-      move_column(df, df_new, pair[0], pair[1])
-      
-    # Fill
-    for pair in fill_pairs:
-      df_new[pair[0]] = pair[1]
-    
-    # Change new header
-    df_new.columns = header_new_final
 
-    # Save the file
+    if df.columns.size < MIN_COL: 
+      for i in range(df.columns.size+1, MIN_COL):
+        df[header_old[i]] = ''
+
+  else:
+    df.columns = [
+        header_old[idx] if idx < len(header_old) else f'col_{idx}'
+        for idx, _ in enumerate(df.columns)
+    ]
   
+  # Move columns
+  for pair in move_col_pairs:
+    df_new[pair[1]] = df.pop(pair[0])
+    
+  # Fill
+  for pair in fill_pairs:
+    df_new[pair[0]] = pair[1]
+  
+  # Change new header
+  df_new.columns = header_new_final
+
   return df_new
     
 
