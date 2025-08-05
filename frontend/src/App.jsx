@@ -70,17 +70,22 @@ const App = () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/transform`, {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/transform`, {
       method: 'POST',
       body: formData,
     });
 
-    if (response.ok) {
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      return url;
-    } else {
-      setErrorMessage(`"${file.name}" 轉換失敗：${response.statusText}`);
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        return url;
+      } else {
+        setErrorMessage(`"${file.name}" 轉換失敗：${response.statusText}`);
+        return;
+      }
+    } catch (error) {
+      setErrorMessage(`"${file.name}" 轉換失敗：無法連接伺服器`);
       return;
     }
   };
