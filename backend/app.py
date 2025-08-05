@@ -4,6 +4,7 @@ import chardet
 import pandas as pd
 from transform import transform_file
 import io
+import os
 
 app = Flask(__name__)
 CORS(app) #, origins = ['http://localhost:5173'])
