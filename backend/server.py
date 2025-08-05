@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 import chardet
 import pandas as pd
 from transform import transform_file
 import io
 
 app = Flask(__name__)
+CORS(app) #, origins = ['http://localhost:5173'])
 
 @app.route("/")
 def hello_world():

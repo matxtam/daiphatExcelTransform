@@ -1,41 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Drag & Drop</title>
-    <link rel="stylesheet" href="style.css"/>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🖼️ Image Drop Zone</h1>
-            <p>Drag and drop your images here or click to browse</p>
-        </div>
-
-        <div class="drop-zone" id="dropZone">
-            <div class="drop-zone-content">
-                <span class="upload-icon">📁</span>
-                <h3>Drop your images here</h3>
-                <p>Support for JPG, PNG, GIF, WebP files</p>
-                <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
-                    Browse Files
-                </button>
-            </div>
-            <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
-        </div>
-
-        <div class="error-message" id="errorMessage"></div>
-
-        <div class="preview-container" id="previewContainer">
-            <div class="preview-header">
-                <h3>Uploaded Images</h3>
-                <button class="clear-btn" onclick="clearAllImages()">Clear All</button>
-            </div>
-            <div class="image-grid" id="imageGrid"></div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大發送貨單轉換工具</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
