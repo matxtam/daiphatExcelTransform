@@ -3,6 +3,7 @@ import { cn } from '@utils/cn';
 import FancyButton from '@components/FancyButton';
 import DropZone from '@components/DropZone';
 import FancyContainer from '@components/FancyContainer';
+import LoadingDots from '@components/LoadingDots';
 
 
 const App = () => {
@@ -52,16 +53,21 @@ const App = () => {
 
   const addUploadedFile = async (file) => {
     const fileId = Date.now() + Math.random();
+    setUploadedFiles(prev => [...prev, { id:fileId, loading:true, name: file.name}]);
     const url = await requestFileTransform(file);
     if (!url) return;
     const fileData = {
       id: fileId,
+      loading: false,
       name: file.name,
       size: formatFileSize(file.size),
       url: url,
     };
-
-    setUploadedFiles(prev => [...prev, fileData]);
+    setUploadedFiles(prev=>
+      prev.map(item =>
+        (item.id === fileId) ? fileData : item
+      )
+    );
   };
 
   const requestFileTransform = async (file) => {
@@ -188,6 +194,9 @@ const App = () => {
                   className="grid grid-cols-[1fr_100px_48px] content-end items-end justify-between justify-items-start w-full h-10 px-2 py-1 border-b-2 border-red-800 overflow-hidden transition-all duration-300 hover:border-yellow-400"
                 >
 
+                  {file.loading ? (
+                    <div className="text-black font-bold truncate">{file.name} 轉換中 <LoadingDots/></div>
+                  ): (<>
                   {/* download link */}
                   <a
                     className="text-black font-bold truncate"
@@ -202,6 +211,8 @@ const App = () => {
                   <FancyButton onClick={() => removeFile(file.id)}
                     className="text-sm px-2 py-1 m-0"
                   >刪除</FancyButton>
+                  </>)}
+
                 </div>
               ))}
             </div>

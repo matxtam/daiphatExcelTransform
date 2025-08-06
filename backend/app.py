@@ -28,11 +28,11 @@ def transform():
   file.seek(0)
   df = pd.read_excel(file)# , encoding=charenc)
   if df is None:
-    return jsonify({'error': 'Invalid file format'}), 400
+    return jsonify({'error': 'Invalid file format'}, 400)
 
   df_new = transform_file(df)
   if df_new is None:
-    return jsonify({'error': 'Invalid file format'}), 400
+    return jsonify({'error': 'Invalid file format'}, 400)
 
   file_new = io.BytesIO()
   df_new.to_excel(file_new, index=False)
