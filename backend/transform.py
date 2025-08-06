@@ -1,5 +1,7 @@
+from unittest import result
 import pandas as pd
 import chardet
+import re
 
 MIN_COL = 40
 
@@ -24,14 +26,15 @@ def transform_file(df):
   header_old = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
                 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ']
   header_new = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O']
-  header_new_final = ["訂單號碼",	"寄件件數",	"尺寸",	"重量",	"品名",	"收件公司",	"收件者姓名 出貨商",
-                    "收件地址",	"收件電話 出貨商", "計件公司", "寄件者姓名", "代收貨款", "指定配送日期",  "備註1", "備註2" ]
+  header_new_final = ["訂單號碼",	"寄件件數",	"尺寸",	"重量",	"品名",	"收件公司",	"收件者姓名",
+                    "收件地址",	"收件電話", "計件公司", "寄件者姓名", "代收貨款", "指定配送日期",  "備註1", "備註2" ]
   move_col_pairs = [
     ('E', 'A'),
     ('V', 'E'),
     ('I', 'F'),
-    ('AJ', 'G'),
+    # ('AJ', 'G'),
     ('J', 'H'),
+    # ('AJ', 'I'),
     ('AD', 'L'),
     ('F', 'M'),
     ('R', 'N'),
@@ -64,6 +67,11 @@ def transform_file(df):
   # Move columns
   for pair in move_col_pairs:
     df_new[pair[1]] = df.pop(pair[0])
+
+  # Split name and phone number
+  df_new['G'] = df['AJ'].str.replace(r'(\d.*\d)', '', regex=True)
+  df_new['I'] = df['AJ'].str.extract(r'(\d.*\d)')
+
     
   # Fill
   for pair in fill_pairs:

@@ -38,7 +38,6 @@
 
 ## 即將推出
 - 一鍵下載全部
-- 名字、手機號碼拆分
 
 ## (For developer) Steps to run at local
 1. clone this repo
