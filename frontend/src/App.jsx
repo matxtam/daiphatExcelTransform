@@ -4,11 +4,13 @@ import FancyButton from '@components/FancyButton';
 import DropZone from '@components/DropZone';
 import FancyContainer from '@components/FancyContainer';
 import LoadingDots from '@components/LoadingDots';
+import LangSwitcher from '@components/LangSwitcher';
 
 
 const App = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [lang, setLang] = useState('vn');
   const fileInputRef = useRef(null);
 
   const handleDropZoneDrop = (e) => {
@@ -34,7 +36,7 @@ const App = () => {
     files.forEach(file => {
       if (!file.type.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') &&
         !file.type.startsWith('application/vnd.ms-excel')) {
-        setErrorMessage(`"${file.name}"不是有效的 Excel 文件。`);
+        setErrorMessage(lang == "vn" ? `"${file.name}" File excel hết hiệu lực` : `"${file.name}"不是有效的 Excel 文件。`);
         return;
       }
 
@@ -55,7 +57,10 @@ const App = () => {
     const fileId = Date.now() + Math.random();
     setUploadedFiles(prev => [...prev, { id:fileId, loading:true, name: file.name}]);
     const url = await requestFileTransform(file);
-    if (!url) return;
+    if (!url){
+      removeFile(fileId);
+      return;
+    }
     const fileData = {
       id: fileId,
       loading: false,
@@ -87,18 +92,20 @@ const App = () => {
         const url = URL.createObjectURL(blob);
         return url;
       } else {
-        setErrorMessage(`"${file.name}" 轉換失敗：${response.status}${response.statusText}`);
+        setErrorMessage(`"${file.name}" ${
+          lang == "vn" ? "Chuyển đổi thất bại" : "轉換失敗"
+        }：${response.status}${response.statusText}`);
         return;
       }
     } catch (error) {
-      setErrorMessage(`"${file.name}" 轉換失敗：伺服器錯誤`);
+      setErrorMessage(lang == "vn" ? `"${file.name}" Chuyển đổi thất bại: Lỗi Server` : `"${file.name}" 轉換失敗：伺服器錯誤`);
       return;
     }
   };
 
 
-  const removeFile = (imageId) => {
-    setUploadedFiles(prev => prev.filter(img => img.id !== imageId));
+  const removeFile = (fileId) => {
+    setUploadedFiles(prev => prev.filter(img => img.id !== fileId));
   };
 
   const clearAllFiles = () => {
@@ -159,9 +166,12 @@ const App = () => {
       />
 
 
-      <FancyContainer title="🏮 送貨單轉換器 🏮" >
+      <FancyContainer title={lang == "vn" ? "Trình chuyển đổi đơn giao hàng":"送貨單轉換器"}>
+
+        <LangSwitcher lang={lang} setLang={setLang} className="absolute top-4 right-4"/>
 
         <DropZone
+          lang={lang}
           handleDropZoneDrop={handleDropZoneDrop}
           handleDropZoneClick={handleDropZoneClick}
         >
@@ -191,11 +201,11 @@ const App = () => {
         {uploadedFiles.length > 0 && (
           <div className="m-8">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold text-red-800">👇點擊下載👇</h3>
               <div className="flex gap-2">
-                <FancyButton onClick={clearAllFiles}>清空全部</FancyButton>
-                <FancyButton onClick={downloadAllFiles}>下載全部</FancyButton>
+                <h3 className="text-2xl font-bold text-red-800">👇{lang == 'vn' ? "Nhấn để tải xuống" : "點擊下載"}👇</h3>
+                <FancyButton onClick={downloadAllFiles}>{lang == "vn" ? "Tải về toàn bộ":"下載全部"}</FancyButton>
               </div>
+              <FancyButton onClick={clearAllFiles}>{lang == "vn" ? "Xóa hết" : "清空全部"}</FancyButton>
             </div>
 
             {/* File list */}
@@ -207,7 +217,7 @@ const App = () => {
                 >
 
                   {file.loading ? (
-                    <div className="text-black font-bold truncate">{file.name} 轉換中 <LoadingDots/></div>
+                    <div className="text-black font-bold truncate">{file.name} {lang == "vn"?"Đang chuyển đổi":"轉換中"} <LoadingDots/></div>
                   ): (<>
                   {/* download link */}
                   <a
@@ -222,7 +232,7 @@ const App = () => {
                   {/* Remove button */}
                   <FancyButton onClick={() => removeFile(file.id)}
                     className="text-sm px-2 py-1 m-0"
-                  >刪除</FancyButton>
+                  >{lang == "vn"?"Xóa":"刪除"}</FancyButton>
                   </>)}
 
                 </div>

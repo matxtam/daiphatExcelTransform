@@ -1,6 +1,7 @@
 import FancyButton from "./FancyButton";
 import { useState, useRef } from "react";
-export default function DropZone({ children, handleDropZoneDrop, handleDropZoneClick }) {
+import excellogo from "@assets/excellogo.png";
+export default function DropZone({ children, handleDropZoneDrop, handleDropZoneClick, lang }) {
   const [isDragActive, setIsDragActive] = useState(false);
   
   const preventDefaults = (e) => {
@@ -42,17 +43,18 @@ export default function DropZone({ children, handleDropZoneDrop, handleDropZoneC
           onClick={handleDropZoneClick}
         >
           {/* Decorative characters */}
-          <div className="absolute top-4 left-8 text-3xl font-bold opacity-20 text-red-600">大</div>
-          <div className="absolute bottom-4 right-8 text-3xl font-bold opacity-20 text-red-600">發</div>
+          <div className="absolute top-4 left-8 text-3xl font-bold opacity-20 text-red-600">{lang == 'vn' ?"Đại":"大"}</div>
+          <div className="absolute bottom-4 right-8 text-3xl font-bold opacity-20 text-red-600">{lang == 'vn' ? "Phát":"發"}</div>
           
           <div className="pointer-events-none">
-            <span className="text-6xl block mb-4 text-red-600" style={{textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
-              🏮
+            <span className="text-6xl block mb-4 text-red-600 text-center justify-items-center" style={{textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
+              <img src={excellogo} width="100"></img>
+              
             </span>
-            <h3 className="text-2xl font-bold mb-2 text-red-800">將文件拖曳到這裡</h3>
-            <p className="mb-4 text-red-700">支援 xls, xlsx 格式</p>
+            <h3 className="text-2xl font-bold mb-2 text-red-800">{lang == 'vn' ? "Kéo thả file vào đây":"將文件拖曳到這裡"}</h3>
+            <p className="mb-4 text-red-700">{lang == 'vn' ? "Hỗ trợ file đuôi xls, xlsx":"支援 xls, xlsx 格式"}</p>
             <FancyButton className="px-8 py-3 z-2" type="middle">
-              瀏覽文件
+              {lang == 'vn' ? "Xem file":"瀏覽文件"}
             </FancyButton>
           </div>
          {children} 
