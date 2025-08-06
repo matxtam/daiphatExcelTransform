@@ -34,7 +34,7 @@ const App = () => {
     files.forEach(file => {
       if (!file.type.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') &&
         !file.type.startsWith('application/vnd.ms-excel')) {
-        setErrorMessage(`"${file.name}" 不是有效的 Excel 文件。`);
+        setErrorMessage(`"${file.name}"不是有效的 Excel 文件。`);
         return;
       }
 
@@ -78,20 +78,20 @@ const App = () => {
 
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/transform`, {
-      method: 'POST',
-      body: formData,
-    });
+        method: 'POST',
+        body: formData,
+      });
 
       if (response.ok) {
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
         return url;
       } else {
-        setErrorMessage(`"${file.name}" 轉換失敗：${response.statusText}`);
+        setErrorMessage(`"${file.name}" 轉換失敗：${response.status}${response.statusText}`);
         return;
       }
     } catch (error) {
-      setErrorMessage(`"${file.name}" 轉換失敗：無法連接伺服器`);
+      setErrorMessage(`"${file.name}" 轉換失敗：伺服器錯誤`);
       return;
     }
   };
@@ -106,11 +106,20 @@ const App = () => {
   };
 
   const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 字元';
+    if (bytes === 0) return '0 Byte';
     const k = 1024;
-    const sizes = ['字元', 'KB', 'MB', 'GB'];
+    const sizes = ['Byte', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const downloadAllFiles = () => {
+    uploadedFiles.forEach(file => {
+      const link = document.createElement('a');
+      link.href = file.url;
+      link.download = "transformed_" + file.name;
+      link.click();
+    });
   };
 
 
@@ -183,7 +192,10 @@ const App = () => {
           <div className="m-8">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-2xl font-bold text-red-800">👇點擊下載👇</h3>
-              <FancyButton onClick={clearAllFiles}>清空全部</FancyButton>
+              <div className="flex gap-2">
+                <FancyButton onClick={clearAllFiles}>清空全部</FancyButton>
+                <FancyButton onClick={downloadAllFiles}>下載全部</FancyButton>
+              </div>
             </div>
 
             {/* File list */}

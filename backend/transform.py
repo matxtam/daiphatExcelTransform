@@ -1,7 +1,6 @@
 from unittest import result
 import pandas as pd
 import chardet
-import re
 
 MIN_COL = 40
 
