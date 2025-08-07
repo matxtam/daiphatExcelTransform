@@ -44,6 +44,7 @@ const App = () => {
       //   setErrorMessage(`"${file.name}" 文件過大。最大支援 10MB。`);
       //   return;
       // }
+      console.log(file)
 
       validFiles.push(file);
     });
@@ -61,10 +62,14 @@ const App = () => {
       removeFile(fileId);
       return;
     }
+
+
+    const basename = file.name.split('.')[0];
     const fileData = {
       id: fileId,
       loading: false,
       name: file.name,
+      downloadname: basename + "_transformed.xlsx",
       size: formatFileSize(file.size),
       url: url,
     };
@@ -124,7 +129,7 @@ const App = () => {
     uploadedFiles.forEach(file => {
       const link = document.createElement('a');
       link.href = file.url;
-      link.download = "transformed_" + file.name;
+      link.download = file.downloadname;
       link.click();
     });
   };
@@ -223,7 +228,7 @@ const App = () => {
                   <a
                     className="text-black font-bold truncate"
                     href={file.url} target="_blank" rel="noopener noreferrer"
-                    download={"transformed_" + file.name}
+                    download={file.downloadname}
                   >{file.name}</a>
 
                   {/* File size */}

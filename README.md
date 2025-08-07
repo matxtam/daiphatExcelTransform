@@ -55,7 +55,7 @@ pip install -r requirements.txt
 3. Start Flask
 ```bash
 # @backend
-flask run dev
+flask run
 ```
 
 ### Frontend

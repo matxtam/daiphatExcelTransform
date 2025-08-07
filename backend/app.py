@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
-import chardet
+# import chardet
 import pandas as pd
 from transform import transform_file
 import io
@@ -20,13 +20,13 @@ def transform():
   file = request.files['file']
 
   # Find encoding
-  file.seek(0)
-  result = chardet.detect(file.read())
-  charenc = result['encoding']
+  # file.seek(0)
+  # result = chardet.detect(file.read())
+  # charenc = result['encoding']
 
   # Transform
   file.seek(0)
-  df = pd.read_excel(file)# , encoding=charenc)
+  df = pd.read_excel(file, dtype=str)# , encoding=charenc)
   if df is None:
     return jsonify({'error': 'Invalid file format'}, 400)
 

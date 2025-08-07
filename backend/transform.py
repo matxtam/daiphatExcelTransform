@@ -40,9 +40,9 @@ def transform_file(df):
     ('AN', 'O')
   ]
   fill_pairs = [
-    ('B', '1'),
-    ('C', '1'),
-    ('D', '1'),
+    ('B', 1),
+    ('C', 1),
+    ('D', 1),
     ('J', "大發公司"),
     ('K', "大發公司"),
   ]
@@ -70,7 +70,9 @@ def transform_file(df):
   # Split name and phone number
   df_new['G'] = df['AJ'].str.replace(r'(\d.*\d)', '', regex=True)
   df_new['I'] = df['AJ'].str.extract(r'(\d.*\d)')
-
+  
+  # Turn money to number
+  df_new['L'] = df_new['L'].astype(int)
     
   # Fill
   for pair in fill_pairs:
@@ -83,9 +85,20 @@ def transform_file(df):
     
 
 
-if __name__ == "__main__":
-  file_path = "example/upload.csv"
-  new_file_path = "example/download.csv"
+def main_csv():
+  file_path = "../examples/upload.csv"
+  new_file_path = "../examples/download.csv"
   df = load_csv(file_path)
   df_new = transform_file(df)
   df_new.to_csv(new_file_path, index=False)
+
+def main_excel():
+  file_path = "../examples/upload.xls"
+  new_file_path = "../examples/download.xls"
+  df = pd.read_excel(file_path, dtype=str)# , encoding=charenc)
+  df_new = transform_file(df)
+  df_new.to_excel(new_file_path, engine='openpyxl', index=False)
+
+
+if __name__ == "__main__":
+  main_excel()
