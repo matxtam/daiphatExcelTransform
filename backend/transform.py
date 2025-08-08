@@ -97,7 +97,7 @@ def transform_file(df, keep_product_name=False):
   agg_dict = {col: 'first' for col in df_new.columns if col != 'A'}
   agg_dict.update({
       'E': (lambda x: (', '.join(x.astype(str)) if keep_product_name else '1')),
-      'B': 'sum',
+      # 'B': 'sum',
       'L': 'sum',
   })
 
