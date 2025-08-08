@@ -96,7 +96,7 @@ def transform_file(df, keep_product_name=False):
   # Remove duplicated rows
   agg_dict = {col: 'first' for col in df_new.columns if col != 'A'}
   agg_dict.update({
-      'E': (lambda x: (', '.join(x.astype(str)) if keep_product_name else '')),
+      'E': (lambda x: (', '.join(x.astype(str)) if keep_product_name else '1')),
       'B': 'sum',
       'L': 'sum',
   })
@@ -132,6 +132,7 @@ def export_excel_beautifully(df, filename):
 
     # Autofit width
     for i, col in enumerate(df.columns):
+      if i == 4: continue
       max_len = max(
         len(str(col)),  # header length
         df[col].astype(str).str.len().max()  # max data length

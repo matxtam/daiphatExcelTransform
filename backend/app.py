@@ -30,7 +30,7 @@ def transform():
   if df is None:
     return jsonify({'error': 'Invalid file format'}, 400)
 
-  df_new = transform_file(df, keep_product_name=True)
+  df_new = transform_file(df, keep_product_name=False)
   if df_new is None:
     return jsonify({'error': 'Invalid file format'}, 400)
 
