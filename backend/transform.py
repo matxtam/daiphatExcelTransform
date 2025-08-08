@@ -83,8 +83,11 @@ def transform_file(df, keep_product_name=False):
     df_new[pair[0]] = pair[1]
 
   # Split name and phone number
-  df_new['G'] = df['AJ'].str.replace(r'(\d.*\d)', '', regex=True)
-  df_new['I'] = df['AJ'].str.extract(r'(\d.*\d)')
+  df_new['G'] = df['AJ'].str.replace(r'(\d.*\d)', '', regex=True).fillna('None')
+  df_new['I'] = df['AJ'].str.extract(r'(\d.*\d)').fillna('None')
+
+  # Fill required field
+  df_new['H'].fillna('None', inplace=True)
   
   # Turn money to number
   df_new['L'] = df_new['L'].astype(int)
@@ -99,7 +102,7 @@ def transform_file(df, keep_product_name=False):
   df_new = df_new.groupby('A', as_index=False).agg(agg_dict)
 
   # Remove sum rows
-  df_new = df_new.loc[df_new['A'].isna()]
+  df_new = df_new.loc[~df_new['A'].isna()]
 
   # Change new header
   df_new.columns = header_new_final
