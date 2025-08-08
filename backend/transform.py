@@ -87,7 +87,8 @@ def transform_file(df, keep_product_name=False):
   df_new['I'] = df['AJ'].str.extract(r'(\d.*\d)').fillna('None')
 
   # Fill required field
-  df_new['H'].fillna('None', inplace=True)
+  # df_new['H'].fillna('None', inplace=True)
+  df_new.fillna({'H': 'None'}, inplace=True)
   
   # Turn money to number
   df_new['L'] = df_new['L'].astype(int)
