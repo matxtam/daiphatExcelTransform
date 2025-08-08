@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 # import chardet
 import pandas as pd
-from transform import transform_file
+from transform import transform_file, export_excel_beautifully
 import io
 import os
 
@@ -35,7 +35,9 @@ def transform():
     return jsonify({'error': 'Invalid file format'}, 400)
 
   file_new = io.BytesIO()
-  df_new.to_excel(file_new, index=False)
+  # df_new.to_excel(file_new, index=False)
+  export_excel_beautifully(df_new, file_new)
+
   file_new.seek(0)
   return send_file(file_new, as_attachment=True, download_name='download.xlsx',  mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
